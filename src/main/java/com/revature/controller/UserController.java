@@ -15,10 +15,16 @@ public class UserController {
 
 	public void authenticate(UsernamePasswordAuthentication loginRequestData) {
 		// TODO: implement
+		User user = new User();
+		user = userService.authenticate(loginRequestData);
+		//PlanetController planetController = new PlanetController();
+
 	}
 
 	public void register(User registerRequestData) {
 		// TODO: implement
+		//pass user information into the service class for registration (userService.register(User))
+		userService.register(registerRequestData);
 	}
 
 	public void logout() {

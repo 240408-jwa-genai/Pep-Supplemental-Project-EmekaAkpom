@@ -1,9 +1,11 @@
 package com.revature.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.revature.models.Planet;
 import com.revature.repository.PlanetDao;
+import com.revature.utilities.ConnectionUtil;
 
 public class PlanetService {
 
@@ -15,26 +17,40 @@ public class PlanetService {
 
 	public List<Planet> getAllPlanets() {
 		// TODO Auto-generated method stub
-		return null;
+		return dao.getAllPlanets();
 	}
 
 	public Planet getPlanetByName(int ownerId, String planetName) {
 		// TODO Auto-generated method stub
+		Planet planet = new Planet();
+		planet.setName(planetName);
+		planet.setOwnerId(ownerId);
+		if (planet.getOwnerId() == ownerId && planet.getName().equals(planetName)){
+			return planet;
+		}
 		return null;
 	}
 
 	public Planet getPlanetById(int ownerId, int planetId) {
 		// TODO Auto-generated method stub
+		Planet planet = new Planet();
+		planet.setId(planetId);
+		planet.setOwnerId(ownerId);
+		if (planet.getOwnerId() == ownerId && planet.getId() == planetId){
+			return planet;
+		}
 		return null;
 	}
 
 	public Planet createPlanet(int ownerId, Planet planet) {
 		// TODO Auto-generated method stub
-		return null;
+		planet.setOwnerId(ownerId);
+		dao.createPlanet(planet);
+		return planet;
 	}
 
 	public boolean deletePlanetById(int planetId) {
 		// TODO Auto-generated method stub
-		return false;
+		return dao.deletePlanetById(planetId);
 	}
 }
