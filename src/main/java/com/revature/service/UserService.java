@@ -3,10 +3,13 @@ import java.util.Objects;
 import java.util.Scanner;
 
 
+import com.revature.controller.MoonController;
 import com.revature.controller.PlanetController;
+import com.revature.models.Moon;
 import com.revature.models.Planet;
 import com.revature.models.User;
 import com.revature.models.UsernamePasswordAuthentication;
+import com.revature.repository.MoonDao;
 import com.revature.repository.PlanetDao;
 import com.revature.repository.UserDao;
 
@@ -29,19 +32,27 @@ public class UserService {
 				System.out.println("Login was successful!\nDisplayed below is your current Planet list:\n");
 
 				Planet planet = new Planet();
+				Moon moon = new Moon();
+				MoonDao moonDao = new MoonDao();
+				MoonService moonService = new MoonService(moonDao);
+				MoonController moonController = new MoonController(moonService);
 				PlanetDao planetDao = new PlanetDao();
 				PlanetService planetService = new PlanetService(planetDao);
 				PlanetController planetController = new PlanetController(planetService);
 
-				planetController.getAllPlanets(loginUser.getId());
-
 				try{
 					Scanner scanner = new Scanner(System.in);
-					System.out.println("\nWhat would you like to do with your Planet list? Press '1' to add/remove a planet, or press '2' to add/remove a moon: ");
+					planetController.getAllPlanets(loginUser.getId());
+
+					System.out.println("\nWhat would you like to do with your Planet list? Press '1' to add/remove a planet, or press '2' to add/remove a moon. Press '3' to logout: ");
+
 					String newUserInput = scanner.nextLine();
 					while(!Objects.equals(newUserInput, "3")){
 						if (Objects.equals(newUserInput, "1")){
-							System.out.println("\nWould you like to add or remove a Planet? Press '1' to add a planet, or press '2' to remove a planet: ");
+							//Display Planet list to user
+							planetController.getAllPlanets(loginUser.getId());
+
+							System.out.println("\nDisplayed above is your planet list.\nWould you like to add or remove a Planet? Press '1' to add a planet, or press '2' to remove a planet. Press '3' to go back: ");
 							newUserInput = scanner.nextLine();
 							while(!Objects.equals(newUserInput, "3")){
 								if (Objects.equals(newUserInput, "1")){
@@ -49,34 +60,119 @@ public class UserService {
 									newUserInput = scanner.nextLine();
 									planet.setName(newUserInput);
 									planet.setOwnerId(loginUser.getId());
-									planetService.createPlanet(loginUser.getId(), planet);
+									//planetService.createPlanet(loginUser.getId(), planet);
+									planetController.createPlanet(loginUser.getId(), planet);
 								}
 
 								else if (Objects.equals(newUserInput, "2")){
+
 									System.out.println("Please enter the ID of the planet that you would like to remove: ");
 									int numInput = scanner.nextInt();
 									scanner.nextLine();
-									System.out.print("Are you sure that you want to remove this planet? yes or no:");
-									newUserInput = scanner.nextLine();
-									if (newUserInput.toUpperCase().equals("YES")){
-										planetController.deletePlanet(loginUser.getId(), numInput);
+
+									if (planetService.getPlanetById(loginUser.getId(), numInput) != null) {
+										System.out.print("Are you sure that you want to remove this planet? \nCAUTION: Removing this planet will remove all associated moons. yes or no:");
+										newUserInput = scanner.nextLine();
+										if (newUserInput.toUpperCase().equals("YES")) {
+											System.out.println(planetService.getPlanetById(loginUser.getId(), numInput).getName() + " has been removed from the planet list.\nAll associated moons have also been removed.");
+											planetController.deletePlanet(loginUser.getId(), numInput);
+											for (Moon currMoon : moonService.getMoonsFromPlanet(numInput)) {
+												moonController.deleteMoon(currMoon.getId());
+											}
+										}
 									}
 
+									else
+										System.out.println("Planets with this ID do not exist in your account.");
 								}
 
+								else
+									System.out.println("Invalid input!");
 
-								System.out.println("\nWould you like to add or remove a Planet? Press '1' to add a planet, or press '2' to remove a planet: ");
+								planetController.getAllPlanets(loginUser.getId());
+								System.out.println("\nWould you like to add or remove a Planet? Press '1' to add a planet, or press '2' to remove a planet. Press '3' to go back: ");
 								newUserInput = scanner.nextLine();
 							}
+
 						}
 
-							System.out.println("\nWhat would you like to do with your Planet list? Press '1' to add/remove a planet, or press '2' to add/remove a moon: ");
-							newUserInput = scanner.nextLine();
+						else if (Objects.equals(newUserInput, "2")){
+							planetController.getAllPlanets(loginUser.getId());
+
+							System.out.println("\nDisplayed above is your Planet list.\nPlease select the ID of the Planet that you would like to interact with:");
+
+							int numInput = scanner.nextInt();
+							scanner.nextLine();
+
+							if (planetService.getPlanetById(loginUser.getId(), numInput) != null) {
+
+								moonController.getPlanetMoons(numInput);
+
+								System.out.println("Displayed above is the list of moons for this planet.");
+
+								System.out.println("\nWould you like to add or remove a Moon? Press '1' to add a moon, or press '2' to remove a moon. Press '3' to go back: ");
+								newUserInput = scanner.nextLine();
+
+								while(!Objects.equals(newUserInput, "3")){
+									if (Objects.equals(newUserInput, "1")){
+										System.out.println("Please enter the name of the moon that you would like to add: ");
+										newUserInput = scanner.nextLine();
+										moon.setName(newUserInput);
+										moon.setMyPlanetId(numInput);
+										moonController.createMoon(loginUser.getId(), moon);
+									}
+
+									else if (Objects.equals(newUserInput, "2")){
+
+										moonController.getPlanetMoons(numInput);
+
+										System.out.println("Please enter the ID of the moon that you would like to remove: ");
+										int moonIDInput = scanner.nextInt();
+										scanner.nextLine();
+										if (moonService.getMoonById(numInput, moonIDInput) != null) {
+
+											System.out.print("Are you sure that you want to remove this moon? yes or no:");
+											newUserInput = scanner.nextLine();
+											if (newUserInput.toUpperCase().equals("YES")) {
+													System.out.println(moonService.getMoonById(numInput, moonIDInput).getName() + " has been removed from the moon list.");
+													moonController.deleteMoon(moonIDInput);
+											}
+										}
+
+
+										else
+											System.out.println("The moon of ID " + moonIDInput + " does not exist within this planet.");
+
+									}
+
+									else
+										System.out.println("Invalid input!");
+
+
+									moonController.getPlanetMoons(numInput);
+
+									System.out.println("\nWould you like to add or remove a moon? Press '1' to add a moon, or press '2' to remove a moon. Press '3' to go back: ");
+									newUserInput = scanner.nextLine();
+								}
+							}
+
+							else
+								System.out.println("Planets with this ID does not exist in your account.");
+
+
+						}
+
+						else
+							System.out.println("Invalid input!");
+
+						planetController.getAllPlanets(loginUser.getId());
+
+						System.out.println("\nWhat would you like to do with your Planet list? Press '1' to add/remove a planet, or press '2' to add/remove a moon. Press '3' to logout: ");
+						newUserInput = scanner.nextLine();
 					}
 				} catch(Exception e){
 					System.out.print("An error has occurred in the system!");
 				}
-				//planetController
 
 				return loginUser;
 			}

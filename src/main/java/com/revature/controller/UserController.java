@@ -29,6 +29,7 @@ public class UserController {
 
 	public void logout() {
 		// TODO: implement
+		System.out.println("You have successfully been logged out!");
 	}
 	
 	public boolean checkAuthorization(int userId) {	

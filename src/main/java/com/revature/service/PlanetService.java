@@ -33,11 +33,8 @@ public class PlanetService {
 
 	public Planet getPlanetById(int ownerId, int planetId) {
 		// TODO Auto-generated method stub
-		Planet planet = new Planet();
-		planet.setId(planetId);
-		planet.setOwnerId(ownerId);
-		if (planet.getOwnerId() == ownerId && planet.getId() == planetId){
-			return planet;
+		if (ownerId == dao.getPlanetById(planetId).getOwnerId()){
+			return dao.getPlanetById(planetId);
 		}
 		return null;
 	}

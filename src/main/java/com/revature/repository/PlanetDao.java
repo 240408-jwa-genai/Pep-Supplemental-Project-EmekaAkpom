@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.revature.models.Moon;
 import com.revature.models.Planet;
 import com.revature.utilities.ConnectionUtil;
 
@@ -69,11 +70,12 @@ public class PlanetDao {
 
 			if (rs.next()){
 				possiblePlanet.setId(rs.getInt("id"));
-				return possiblePlanet;
+				possiblePlanet.setName(rs.getString(2));
+				possiblePlanet.setOwnerId(rs.getInt(3));
 			}
 
-			else
-				return null;
+			return possiblePlanet;
+
 
 		} catch(SQLException e){
 			e.printStackTrace();
@@ -84,9 +86,16 @@ public class PlanetDao {
 	public Planet createPlanet(Planet p) {
 		// TODO: implement
 		try(Connection connection = ConnectionUtil.createConnection()){
+			List<Planet> planetList = getAllPlanets();
 			String sql = "INSERT INTO planets (name, ownerID) VALUES (?, ?)";
 			PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, p.getName());
+			for (Planet value : planetList) {
+				if (p.getName().equals(value.getName())) {
+					System.out.println("The moon named \"" + p.getName() + "\" already exists within the list.");
+					return null;
+				}
+			}
 			ps.setInt(2, p.getOwnerId());
 			ps.executeUpdate();
 			Planet possiblePlanet = new Planet();

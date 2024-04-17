@@ -57,6 +57,7 @@ public class MainDriver {
                     userController.authenticate(returnUser);
 
                 }
+
                 System.out.println("\nWelcome to the Planetarium!\nPlease press '1' to create a new account, press '2' to login, or press '3' to quit:");
                 userInput = userScanner.nextLine();
             }
