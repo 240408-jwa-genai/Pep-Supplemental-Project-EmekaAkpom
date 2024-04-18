@@ -90,12 +90,7 @@ public class PlanetDao {
 			String sql = "INSERT INTO planets (name, ownerID) VALUES (?, ?)";
 			PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, p.getName());
-			for (Planet value : planetList) {
-				if (p.getName().equals(value.getName())) {
-					System.out.println("The moon named \"" + p.getName() + "\" already exists within the list.");
-					return null;
-				}
-			}
+
 			ps.setInt(2, p.getOwnerId());
 			ps.executeUpdate();
 			Planet possiblePlanet = new Planet();

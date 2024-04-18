@@ -1,8 +1,11 @@
 package com.revature.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.revature.models.Moon;
+import com.revature.models.UsernamePasswordAuthentication;
 import com.revature.repository.MoonDao;
 
 public class MoonService {
@@ -36,6 +39,22 @@ public class MoonService {
 
 	public Moon createMoon(Moon m) {
 		// TODO implement
+		List<Moon> moonList = getAllMoons();
+		if (m.getName().length() <= 30) {
+			for (Moon moon : moonList){
+				if (m.getName().equals(moon.getName())){
+					System.out.println("The moon, " + moon.getName() + ", already exists within your list. This moon was NOT added to your list.");
+					return null;
+				}
+			}
+
+		}
+
+		else {
+			System.out.println("The moon name entered exceeds the 30-character limit. This moon was NOT added to your list.");
+			return null;
+		}
+		System.out.println(m.getName() + " has been added to the moon list for this planet!\n");
 		return dao.createMoon(m);
 	}
 
