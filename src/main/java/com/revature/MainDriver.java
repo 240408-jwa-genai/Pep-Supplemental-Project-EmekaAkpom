@@ -58,6 +58,8 @@ public class MainDriver {
 
                 }
 
+                else if (!Objects.equals(userInput, "1") || !Objects.equals(userInput, "2"))
+                    System.out.print("Invalid input!\n");
                 System.out.println("\nWelcome to the Planetarium!\nPlease press '1' to create a new account, press '2' to login, or press '3' to quit:");
                 userInput = userScanner.nextLine();
             }
@@ -65,6 +67,7 @@ public class MainDriver {
         } catch(Exception e){
             System.out.print("An error has occurred in the system!");
         }
+        System.out.println("Thank you for using the Planetarium! Farewell!\n");
     }
 
 }

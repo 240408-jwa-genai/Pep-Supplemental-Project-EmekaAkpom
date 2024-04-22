@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import com.revature.controller.MoonController;
 import com.revature.controller.PlanetController;
+import com.revature.controller.UserController;
 import com.revature.models.Moon;
 import com.revature.models.Planet;
 import com.revature.models.User;
@@ -184,6 +185,7 @@ public class UserService {
 				} catch(Exception e){
 					System.out.print("An error has occurred in the system!\n");
 				}
+
 
 				return loginUser;
 			}

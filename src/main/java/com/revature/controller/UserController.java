@@ -17,7 +17,8 @@ public class UserController {
 		// TODO: implement
 		User user = new User();
 		user = userService.authenticate(loginRequestData);
-		//PlanetController planetController = new PlanetController();
+		if (user != null)
+			logout();
 
 	}
 
@@ -29,7 +30,7 @@ public class UserController {
 
 	public void logout() {
 		// TODO: implement
-		System.out.println("You have successfully been logged out!");
+		System.out.println("You have successfully been logged out!\n");
 	}
 	
 	public boolean checkAuthorization(int userId) {	
