@@ -49,14 +49,14 @@ public class PlanetService {
 		if (planet.getName().length() <= 30) {
 			//Iterate planet list to ensure that the planet you will add is not already there
 			for (Planet planet2 : planetList) {
-				if (planet.getName().equals(planet2.getName())) {
+				if (planet.getName().equals(planet2.getName()) && planet.getOwnerId() == planet2.getOwnerId()) {
 					System.out.println("The planet, " + planet2.getName() + ", already exists within your list. This planet was NOT added to your list.");
 					return null;
 				}
 			}
 
 		} else{
-			System.out.println("The moon name entered exceeds the 30-character limit. This moon was NOT added to your list.");
+			System.out.println("The planet name entered exceeds the 30-character limit. This planet was NOT added to your list.");
 			return null;
 		}
 		System.out.println(planet.getName() + " has been added to the planet list for this user!\n");

@@ -91,12 +91,6 @@ public class MoonDao {
 			String sql = "INSERT INTO moons (name, myPlanetId) VALUES (?, ?)";
 			PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, m.getName());
-            for (Moon value : moonList) {
-                if (m.getName().equals(value.getName())) {
-					System.out.println("The moon named \"" + m.getName() + "\" already exists within the list.");
-					return null;
-				}
-            }
 			ps.setInt(2, m.getMyPlanetId());
 			Moon moon = new Moon();
 			ps.executeUpdate();

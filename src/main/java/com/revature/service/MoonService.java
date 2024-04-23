@@ -42,7 +42,7 @@ public class MoonService {
 		List<Moon> moonList = getAllMoons();
 		if (m.getName().length() <= 30) {
 			for (Moon moon : moonList){
-				if (m.getName().equals(moon.getName())){
+				if (m.getName().equals(moon.getName()) && m.getMyPlanetId() == moon.getMyPlanetId()){
 					System.out.println("The moon, " + moon.getName() + ", already exists within your list. This moon was NOT added to your list.");
 					return null;
 				}
